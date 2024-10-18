@@ -10,7 +10,7 @@ import { JwtStrategy } from './jwt.strategy';
     UserModule, 
     PassportModule,
     JwtModule.register({
-      secret: 'secretKey', 
+      secret: process.env.JWT_SECRET || 'defaultSecretKey', // Menggunakan environment variable
       signOptions: { expiresIn: '60m' }, // Konfigurasi token
     }),
   ],

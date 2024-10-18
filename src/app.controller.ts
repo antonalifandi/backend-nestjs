@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AppService } from './app.service';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { UserService } from 'src/user/user.service'; 
 import { AuthService } from './auth/auth.service';
 import { CreateUserDto } from './dto/create-user.dto'; 
@@ -32,6 +33,7 @@ export class AppController {
   }
 
   @Get('master-data')
+  @UseGuards(JwtAuthGuard) 
   @ApiOperation({ summary: 'Get master data users' }) 
   @ApiResponse({ status: 200, description: 'List of users.' })
   async getMasterData() {
