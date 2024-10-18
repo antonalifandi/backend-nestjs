@@ -33,4 +33,31 @@ export class UserService {
     return this.prisma.user.findMany(); 
   }
 
+  async editUser(id: number, data: { email?: string; password?: string; name?: string; role?: string }) {
+    // Pastikan id adalah integer
+    const userId = parseInt(id.toString(), 10); // Jika id sudah dalam bentuk number, Anda bisa melewati langkah ini
+  
+    // Ambil pengguna saat ini
+    const existingUser = await this.prisma.user.findUnique({
+      where: {
+        id: userId, // Pastikan mengirimkan id sebagai integer
+      },
+    });
+  
+    // Jika pengguna tidak ditemukan, Anda bisa mengembalikan error atau null
+    if (!existingUser) {
+      throw new Error('User not found');
+    }
+  
+    // Jika password disertakan, hash password baru
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
+  
+    return this.prisma.user.update({
+      where: { id: userId },
+      data,
+    });
+  }
+
 }

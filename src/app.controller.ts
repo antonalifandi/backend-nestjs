@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { UserService } from 'src/user/user.service'; 
 import { AuthService } from './auth/auth.service';
 import { CreateUserDto } from './dto/create-user.dto'; 
+import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginDto } from './dto/login.dto'; 
 
 @ApiTags('users') 
@@ -39,4 +40,14 @@ export class AppController {
   async getMasterData() {
     return this.userService.findAll(); 
   }
+
+  @Patch(':id') 
+  @UseGuards(JwtAuthGuard) 
+  @ApiOperation({ summary: 'Update user information' })
+  @ApiResponse({ status: 200, description: 'User information updated successfully.' })
+  @ApiResponse({ status: 404, description: 'User not found.' })
+  async updateUser(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.editUser(id, updateUserDto);
+  }
+
 }
