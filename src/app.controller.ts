@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Param, UseGuards, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, UseGuards, ParseIntPipe, Delete } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -48,6 +48,20 @@ export class AppController {
   @ApiResponse({ status: 404, description: 'User not found.' })
   async updateUser(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.editUser(id, updateUserDto);
+  }
+
+  @Delete(':id') 
+  @UseGuards(JwtAuthGuard) 
+  @ApiOperation({ summary: 'Delete user by ID' })
+  @ApiResponse({ status: 200, description: 'User successfully deleted.' })
+  @ApiResponse({ status: 404, description: 'User not found.' })
+  async deleteUser(@Param('id', ParseIntPipe) id: number) {
+    const deletedUser = await this.userService.deleteUser(id);
+    return {
+      statusCode: 200,
+      message: 'User successfully deleted.',
+      data: deletedUser, 
+    };
   }
 
 }
