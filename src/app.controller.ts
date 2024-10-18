@@ -16,15 +16,15 @@ export class AppController {
   ) {}
 
   @Post('register')
-  @ApiOperation({ summary: 'Register a new user' }) // Deskripsi untuk endpoint register
+  @ApiOperation({ summary: 'Register a new user' }) 
   @ApiResponse({ status: 201, description: 'User successfully registered.' })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   async register(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(createUserDto); // Panggil metode untuk membuat user baru
+    return this.userService.createUser(createUserDto); 
   }
 
   @Post('login')
-  @ApiOperation({ summary: 'Login user' }) // Deskripsi untuk endpoint login
+  @ApiOperation({ summary: 'Login user' }) 
   @ApiResponse({ status: 200, description: 'User successfully logged in.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   async login(@Body() loginDto: LoginDto) {
