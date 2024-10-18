@@ -4,7 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  app.enableCors();
   const options = new DocumentBuilder()
     .setTitle('API Example')
     .setDescription('The API description')
@@ -12,7 +12,7 @@ async function bootstrap() {
     .addTag('users')
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document); // URL Swagger UI adalah http://localhost:3000/api
+  SwaggerModule.setup('api', app, document); // URL Swagger UI adalah http://localhost:8080/api
 
   await app.listen(8080);
 }
