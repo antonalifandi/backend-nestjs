@@ -11,7 +11,7 @@ import { JwtStrategy } from './jwt.strategy';
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'defaultSecretKey', // Menggunakan environment variable
-      signOptions: { expiresIn: '60m' }, // Konfigurasi token
+      signOptions: { expiresIn: '7d' }, // Konfigurasi token
     }),
   ],
   providers: [AuthService, JwtStrategy],
