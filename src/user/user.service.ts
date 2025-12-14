@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { user } from '@prisma/client'; 
+import { user } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -20,24 +20,34 @@ export class UserService {
   async findUserByEmail(email: string) {
     return this.prisma.user.findUnique({
       where: { email },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        password: true,
+      },
     });
   }
 
   async findById(id: string): Promise<user | null> {
     return this.prisma.user.findUnique({
-      where: { id }, 
+      where: { id },
     });
   }
 
   async findAll(): Promise<user[]> {
-    return this.prisma.user.findMany(); 
+    return this.prisma.user.findMany();
   }
 
-  async editUser(id: string, data: { email?: string; password?: string; name?: string; role?: string }) {
-    const userId = id; 
+  async editUser(
+    id: string,
+    data: { email?: string; password?: string; name?: string; role?: string },
+  ) {
+    const userId = id;
     const existingUser = await this.prisma.user.findUnique({
       where: {
-        id: userId,  
+        id: userId,
       },
     });
 
@@ -50,7 +60,7 @@ export class UserService {
     }
 
     return this.prisma.user.update({
-      where: { id: userId }, 
+      where: { id: userId },
       data,
     });
   }
@@ -61,7 +71,6 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
     await this.prisma.user.delete({ where: { id } });
-    return user; 
+    return user;
   }
-
 }

@@ -12,22 +12,26 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.userService.findUserByEmail(email);
-    if (user && await bcrypt.compare(password, user.password)) {
-      const { password, ...result } = user;
-      return result;
-    }
-    return null;
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) return null;
+
+    const { password: _, ...result } = user;
+    return result;
   }
 
   async login(user: any) {
     const payload = { email: user.email, sub: user.id };
     const accessToken = this.jwtService.sign(payload);
-
     return {
-        statusCode: 200,
-        message: 'Login successful', 
-        access_token: accessToken,
+      statusCode: 200,
+      message: 'Login successful',
+      access_token: accessToken,
+      user: {
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
     };
   }
-
 }
